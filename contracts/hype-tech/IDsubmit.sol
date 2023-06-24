@@ -4,7 +4,9 @@ pragma solidity ^0.8.4;
 import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "erc721a/contracts/IERC721A.sol";
+
+import {Isubmit} from "./interfaces/Isubmit.sol";
 
 
 
@@ -12,7 +14,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
     @title ERC721A contract for smart contract ETHEREUM SP
     ipfs: https://bafybeid7rsqvtd454ra4tkfa3y2vobmz75zexgxe6zndsj5jk23tbjdnsq.ipfs.nftstorage.link/
     */
-contract IDsubmit is ERC721A, Pausable, Ownable {
+contract IDsubmit is ERC721A, Pausable, Ownable, Ifunder {
 
     //erros
     error NonExistentTokenURI();
@@ -29,28 +31,27 @@ contract IDsubmit is ERC721A, Pausable, Ownable {
     
     string public baseURI;
     mapping(uint256 => string) public idURIs;
+    mapping(address => dados) private dadosID;
+
 
     // SFTRec settings -- omnesprotocol
     uint256 public price;  // full price per hour
     uint256 public maxDiscount;
 
-    // Mentoring setting
-    uint public priceSign; // payment sign
 
     constructor(string memory baseuri, uint256 _price, 
-    uint256 _priceSign, string memory _nome, string memory _symbol)
+    string memory _nome, string memory _symbol)
     ERC721A(_nome, _symbol) {
        baseURI = baseuri;
-       priceSign = _priceSign;
        price = _price;
-       
     }
 
-    function mint() external payable whenNotPaused {
+    function mint(string memory _email, bool _loyalty) external payable whenNotPaused {
         // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`
          if (msg.value >= price-((price*maxDiscount)/10000)) {
             revert MintPriceNotPaid();
         }
+        dadosID[msg.sender] = dados(_email, _loyalty);
         _mint(msg.sender, 1);
 
     }
@@ -73,9 +74,8 @@ contract IDsubmit is ERC721A, Pausable, Ownable {
         idURIs[_id] = newidURI;
     }
 
-    function setPrice(uint256 _priceperHour, uint256 _priceSign) external onlyOwner{
-        price = _priceperHour;
-        priceSign = _priceSign;
+    function setPrice(uint256 _price) external onlyOwner{
+        price = _price;
     }
 
     function setMaxdiscont(uint256 _maxDiscont)external onlyOwner{
