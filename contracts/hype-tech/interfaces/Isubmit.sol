@@ -11,10 +11,10 @@ interface Isubmit {
      * @dev Valores de reputação e entregas dos endereços vinculados ao IDalunos e professors
      */
 
-    //estrutura dos alunos e professores
+    //estrutura dos dados de quem submeteu
     struct dados{        
         string email;
-        bool loyalty; //se quer ser um 
+        uint valuePay;
     }
 
  }

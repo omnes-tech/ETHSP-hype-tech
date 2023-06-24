@@ -19,7 +19,6 @@ contract IDfunder is ERC721A, Pausable, Ownable, Ifunder {
     //erros
     error NonExistentTokenURI();
     error WithdrawTransfer();
-    error MentoringNotApproved();
     error MintPriceNotPaid();
 
     /** @dev event Soulbound
@@ -46,20 +45,20 @@ contract IDfunder is ERC721A, Pausable, Ownable, Ifunder {
        price = _price;
     }
 
-    function mint(string memory _email, bool _loyalty) external payable whenNotPaused {
+    function mintFunder(string memory _email, bool loyalt) external payable whenNotPaused returns(uint256){
         // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`
-         if (msg.value >= price-((price*maxDiscount)/10000)) {
-            revert MintPriceNotPaid();
-        }
-        dadosID[msg.sender] = dados(_email, _loyalty);
+         
+        dadosID[msg.sender] = dados(_email, loyalt);
         _mint(msg.sender, 1);
+        return _nextTokenId() -1;
 
     }
 
 
-    function Airdrop(address _to) external payable onlyOwner{
+    function Airdrop(address _to) external payable onlyOwner returns(uint256){
         // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`.
         _mint(_to, 1);
+        return _nextTokenId() -1;
     }
 
     //set functions

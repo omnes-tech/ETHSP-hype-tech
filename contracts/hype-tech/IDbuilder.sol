@@ -4,7 +4,9 @@ pragma solidity ^0.8.4;
 import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "erc721a/contracts/IERC721A.sol";
+
+import {Ibuilder} from "./interfaces/Ibuilder.sol";
 
 
 
@@ -12,12 +14,11 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
     @title ERC721A contract for smart contract ETHEREUM SP
     ipfs: https://bafybeid7rsqvtd454ra4tkfa3y2vobmz75zexgxe6zndsj5jk23tbjdnsq.ipfs.nftstorage.link/
     */
-contract IDbuilder is ERC721A, Pausable, Ownable {
+contract IDbuilder is ERC721A, Pausable, Ownable, Ibuilder {
 
     //erros
     error NonExistentTokenURI();
     error WithdrawTransfer();
-    error MentoringNotApproved();
     error MintPriceNotPaid();
 
     /** @dev event Soulbound
@@ -29,36 +30,33 @@ contract IDbuilder is ERC721A, Pausable, Ownable {
     
     string public baseURI;
     mapping(uint256 => string) public idURIs;
+    mapping(address => dados) private dadosID;
+
 
     // SFTRec settings -- omnesprotocol
     uint256 public price;  // full price per hour
     uint256 public maxDiscount;
 
-    // Mentoring setting
-    uint public priceSign; // payment sign
 
-    constructor(string memory baseuri, uint256 _price, 
-    uint256 _priceSign, string memory _nome, string memory _symbol)
+    constructor(string memory baseuri, 
+    string memory _nome, string memory _symbol)
     ERC721A(_nome, _symbol) {
        baseURI = baseuri;
-       priceSign = _priceSign;
-       price = _price;
-       
     }
 
-    function mint() external payable whenNotPaused {
-        // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`
-         if (msg.value >= price-((price*maxDiscount)/10000)) {
-            revert MintPriceNotPaid();
-        }
+    function mintSubmit(string memory _email) external payable whenNotPaused returns(uint256){
+        
+        dadosID[msg.sender] = dados(_email, msg.value);
         _mint(msg.sender, 1);
+        return _nextTokenId() -1;
 
     }
 
 
-    function Airdrop(address _to) external payable onlyOwner{
+    function Airdrop(address _to) external payable onlyOwner returns(uint256){
         // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`.
         _mint(_to, 1);
+        return _nextTokenId() -1;
     }
 
     //set functions
@@ -73,9 +71,8 @@ contract IDbuilder is ERC721A, Pausable, Ownable {
         idURIs[_id] = newidURI;
     }
 
-    function setPrice(uint256 _priceperHour, uint256 _priceSign) external onlyOwner{
-        price = _priceperHour;
-        priceSign = _priceSign;
+    function setPrice(uint256 _price) external onlyOwner{
+        price = _price;
     }
 
     function setMaxdiscont(uint256 _maxDiscont)external onlyOwner{

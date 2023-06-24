@@ -14,12 +14,11 @@ import {Isubmit} from "./interfaces/Isubmit.sol";
     @title ERC721A contract for smart contract ETHEREUM SP
     ipfs: https://bafybeid7rsqvtd454ra4tkfa3y2vobmz75zexgxe6zndsj5jk23tbjdnsq.ipfs.nftstorage.link/
     */
-contract IDsubmit is ERC721A, Pausable, Ownable, Ifunder {
+contract IDsubmit is ERC721A, Pausable, Ownable, Isubmit {
 
     //erros
     error NonExistentTokenURI();
     error WithdrawTransfer();
-    error MentoringNotApproved();
     error MintPriceNotPaid();
 
     /** @dev event Soulbound
@@ -46,20 +45,22 @@ contract IDsubmit is ERC721A, Pausable, Ownable, Ifunder {
        price = _price;
     }
 
-    function mint(string memory _email, bool _loyalty) external payable whenNotPaused {
+    function mintSubmit(string memory _email) external payable whenNotPaused returns(uint256){
         // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`
-         if (msg.value >= price-((price*maxDiscount)/10000)) {
+         if (msg.value < price-((price*maxDiscount)/10000)) {
             revert MintPriceNotPaid();
         }
-        dadosID[msg.sender] = dados(_email, _loyalty);
+        dadosID[msg.sender] = dados(_email, msg.value);
         _mint(msg.sender, 1);
+        return _nextTokenId() -1;
 
     }
 
 
-    function Airdrop(address _to) external payable onlyOwner{
+    function Airdrop(address _to) external payable onlyOwner returns(uint256){
         // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`.
         _mint(_to, 1);
+        return _nextTokenId() -1;
     }
 
     //set functions
