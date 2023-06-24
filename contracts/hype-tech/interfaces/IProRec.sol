@@ -19,6 +19,7 @@ interface IProRec {
         uint delivery;//entrega de etapas
         uint reputation; //reputação
         address personID; //não pode criar outro NFT com o mesmo
+        uint projectId;
         bool aluno;
         bool professor;
         bool banned; //banir endereço
@@ -44,15 +45,17 @@ interface IProRec {
     struct Project{        
         uint quantity;//total de pessoas que estão financiando
         uint totalvalue; //total arrecadado
+        address[] takers;
         bool pause;//pausar financiamento
         uint idproject;
+        bool delivered;
     }
 
     //recompensa por entrega -- cada entrega tem um valor correto de acordo com a etapa
-    function deliveryReward(uint _IDentidade, uint value)payable  external;
+    // function deliveryReward(uint _IDentidade, uint value)payable  external;
 
     //entrega e próximo estágio -- atualiza o enum e registra
-    function deliverystage(uint _IDentidade,address _from, uint _delivery) external;
+    // function deliverystage(uint _IDentidade,address _from, uint _delivery) external;
 
 
 
