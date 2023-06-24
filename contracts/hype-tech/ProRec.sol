@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT 
-pragma solidity ^0.8.4;
+pragma solidity >=0.8.15;
 
 import "erc721a/contracts/ERC721A.sol";
 import "erc721a/contracts/IERC721A.sol";
@@ -37,9 +37,9 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
     mapping(address => builder) public infobuilder;
 
     //contabilização de builders -- >= 50%
-    uint Totalbuilders;
+    // uint Totalbuilders;
     //total de entregas
-    uint Totaldeliverys;
+    // uint Totaldeliverys;
 
     //Informações de quem submete projeto
     mapping(address => submit) public infoSubmit;
@@ -82,39 +82,90 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
        
     }
 
-    function mintNewProject(uint _id) external payable onlySubmit(_id) {
+    function submitNewProject(uint _quantity, uint _totalValue) external onlySubmit() {
         // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`
+<<<<<<< HEAD
          if (msg.value < price-((price*maxDiscount)/10000)) {
             revert MintPriceNotPaid(); //implementação do Omnes protocolo aqui e ganhamos por recomendar a levarem novas propostas
         }
         infoProject[_id].idproject;
+=======
+        //  if (msg.value < price-((price*maxDiscount)/10000)) {
+        //     revert MintPriceNotPaid(); 
+        //     //implementação do Omnes protocolo aqui e ganhamos por recomendar a levarem novas propostas
+        // }
+>>>>>>> 36d63aba292f1251064dc0af795c1931621b5e55
 
-        unchecked {
-            ++TotalProjects;
+        address[] memory taker;
+
+        infoProject[++TotalProjects] = Project({
+            quantity: _quantity,
+            totalvalue : _totalValue,
+            takers : taker,
+            pause : true,
+            idproject : _nextTokenId(),
+            delivered : false
+        });
+
+
+        ERC721A._mint(msg.sender, 1);
+
+    }
+
+    function fundProject(uint _projectId) external payable onlyFunder returns (bool){
+        Project memory _aux = infoProject[_projectId];
+        require(_aux.totalvalue <= _aux.totalvalue + msg.value,"ProRec : Amount to fund is over the project limit");
+        infoProject[_projectId].totalvalue = _aux.totalvalue + msg.value;
+
+        infoFunder[msg.sender].value += msg.value;
+
+        return true;
+    }
+
+    function getProject(uint _projectId) external onlyBuilder {
+        Project memory _aux = infoProject[_projectId];
+        require(_aux.takers.length+1 <= _aux.quantity, "ProRec : Not more takers allowed");
+        require(infobuilder[msg.sender].projectId == 0, "ProRec : Already in a project");
+        infoProject[_projectId].takers.push(msg.sender);
+        infobuilder[msg.sender].projectId = _projectId;
+    }
+
+    function deliverBuilder(uint _projectId) external onlyBuilder {
+        builder memory _aux = infobuilder[msg.sender];
+        Project memory _project = infoProject[_projectId];
+        require(_aux.projectId == _projectId,"ProRec : Wrong project");
+        require(_aux.delivery < 3, "ProRec : Already Delivered");
+
+        infobuilder[msg.sender].delivery++;
+
+        uint _internalCounter;
+
+        for(uint i=0; i<_project.quantity; i++){
+            if(infobuilder[_project.takers[i]].delivery == 3)
+            _internalCounter++;
         }
-        _mint(msg.sender, 1);
 
+        if(_internalCounter == _project.quantity)
+        infoProject[_projectId].delivered = true;
+
+    }
+
+    function claimCompensation(uint _projectId) external onlyBuilder {
+        Project memory _aux = infoProject[_projectId];
+        require(_aux.delivered, "ProRec : Not fully delivered yet");
+        require(infobuilder[msg.sender].projectId == _projectId, "ProRec : Wrong Project");
+
+        infobuilder[msg.sender].reputation++;
+        infobuilder[msg.sender].projectId = 0;
+
+        (bool success, ) = payable(msg.sender).call{value:_aux.totalvalue/_aux.quantity}("");
+        require(success, "ProRec : Payment not completed");
     }
 
 
     function Airdrop(address _to) external payable onlyOwner{
         // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`.
         _mint(_to, 1);
-    }
-
-    //only builder -- IProcRec referencia
-
-    
-    function deliveryReward(uint _IDentidade, uint value) payable external onlyBuilder(_IDentidade){
-
-        ++infoProject[msg.value].totalvalue;
-        
-       // payable(msg.sender).transfer();
-    }
-
-    
-    function deliverystage(uint _IDentidade,address _from, uint _delivery) external onlyBuilder(_IDentidade){
-
     }
 
 
@@ -172,9 +223,10 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
         string memory baseuRI = _baseURI();
         string memory json = ".json";
         if (!compareStrings(idURIs[tokenId],baseuRI)) {
-        return bytes(idURIs[tokenId]).length != 0 ? string(abi.encodePacked(idURIs[tokenId], _toString(tokenId), json)) : '';
+        return bytes(idURIs[tokenId]).length != 0 ?
+            string(abi.encodePacked(idURIs[tokenId], _toString(tokenId), json)) : "";
         } else { 
-        return bytes(baseuRI).length != 0 ? string(abi.encodePacked(baseuRI, _toString(tokenId), json)) : '';
+        return bytes(baseuRI).length != 0 ? string(abi.encodePacked(baseuRI, _toString(tokenId), json)) : "";
         } //inserir em uma pasta com imagens diferentes para simular projetos e 
     }
 
@@ -215,18 +267,18 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
         _;
     }
 
-    modifier onlyBuilder(uint _id){
-        require(msg.sender == idbuilder.ownerOf(_id), "Only Builder");
+    modifier onlyBuilder(){
+        require(!infobuilder[msg.sender].banned && idbuilder.balanceOf(msg.sender) == 1, "Only Builder");
         _;
     }
 
-    modifier onlyFunder(uint _id){
-        require(msg.sender == idfunder.ownerOf(_id), "Only funder");
+    modifier onlyFunder(){
+        require(idfunder.balanceOf(msg.sender) == 1 && !infoFunder[msg.sender].banned, "Only funder");
         _;
     }
 
-    modifier onlySubmit(uint _id){
-        require(msg.sender == idsubmit.ownerOf(_id), "Only submit");
+    modifier onlySubmit(){
+        require(idsubmit.balanceOf(msg.sender) == 1, "Only submit");
         _;
     }
 
