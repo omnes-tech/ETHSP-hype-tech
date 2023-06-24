@@ -27,6 +27,7 @@ contract IDbuilder is ERC721A, Pausable, Ownable, Ibuilder {
     event Attest(address indexed to, uint256 indexed tokenId);
     event Revoke(address indexed to, uint256 indexed tokenId);
 
+    string[] private _scriptURI; //when use A.I 
     
     string public baseURI;
     mapping(uint256 => string) public idURIs;
@@ -44,9 +45,9 @@ contract IDbuilder is ERC721A, Pausable, Ownable, Ibuilder {
        baseURI = baseuri;
     }
 
-    function mintSubmit(string memory _email) external payable whenNotPaused returns(uint256){
+    function mintBuilder(string memory _email, bool _student, bool _teacher) external payable whenNotPaused returns(uint256){
         
-        dadosID[msg.sender] = dados(_email, msg.value);
+        dadosID[msg.sender] = dados(_email, _student, _teacher);
         _mint(msg.sender, 1);
         return _nextTokenId() -1;
 
@@ -143,6 +144,19 @@ contract IDbuilder is ERC721A, Pausable, Ownable, Ibuilder {
         if (!transferTx) {
             revert WithdrawTransfer();
         }
+    }
+
+
+    //ERC5169 
+
+    function scriptURI() external view override returns(string[] memory) {
+        return _scriptURI;
+    }
+
+    function setScriptURI(string[] memory newScriptURI) external onlyOwner override {
+        _scriptURI = newScriptURI;
+
+        emit ScriptUpdate(newScriptURI);
     }
 
 }

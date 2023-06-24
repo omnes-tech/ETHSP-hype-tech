@@ -84,17 +84,10 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
 
     function submitNewProject(uint _quantity, uint _totalValue) external onlySubmit() {
         // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`
-<<<<<<< HEAD
          if (msg.value < price-((price*maxDiscount)/10000)) {
             revert MintPriceNotPaid(); //implementação do Omnes protocolo aqui e ganhamos por recomendar a levarem novas propostas
         }
         infoProject[_id].idproject;
-=======
-        //  if (msg.value < price-((price*maxDiscount)/10000)) {
-        //     revert MintPriceNotPaid(); 
-        //     //implementação do Omnes protocolo aqui e ganhamos por recomendar a levarem novas propostas
-        // }
->>>>>>> 36d63aba292f1251064dc0af795c1931621b5e55
 
         address[] memory taker;
 
