@@ -20,8 +20,6 @@ interface IProRec {
         uint reputation; //reputação
         address personID; //não pode criar outro NFT com o mesmo
         uint projectId;
-        bool aluno;
-        bool professor;
         bool banned; //banir endereço
     }
 
@@ -32,7 +30,6 @@ interface IProRec {
         uint reputation; //reputação
         address personID; //não pode criar outro NFT com o mesmo
         bool banned; //banir endereço
-        bool isLoyalty;
     }
 
     struct submit{        
