@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 
 
-/** @author Omnes Blockchain team www.omnestech.org (@Afonsodalvi, @G-Deps @EWCunha and @renancorreadev)
-    @title ERC721A contract for smart contract course for law professionals
+/** @author Omnes Blockchain team www.omnestech.org (@Afonsodalvi, @G-Deps)
+    @title ERC721A contract for smart contract ETHEREUM SP
     ipfs: https://bafybeid7rsqvtd454ra4tkfa3y2vobmz75zexgxe6zndsj5jk23tbjdnsq.ipfs.nftstorage.link/
     */
 contract IDbuilder is ERC721A, Pausable, Ownable {
