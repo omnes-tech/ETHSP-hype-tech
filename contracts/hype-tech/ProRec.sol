@@ -30,6 +30,7 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
 
     
     string public baseURI;
+    string public generalURI;
     address immutable OwnerHYPETECH;
     mapping(uint256 => string) public idURIs;
 
@@ -127,7 +128,7 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
         Project memory _project = infoProject[_projectId];
         require(_aux.projectId == _projectId,"ProRec : Wrong project");
         require(_aux.delivery < 3, "ProRec : Already Delivered");
-        require(compareStrings(_aux.link, link) == false, "ProRec : Already Delivered" );
+        require(compareStrings(_aux.link, _link) == false, "ProRec : Already Delivered" );
 
         infobuilder[msg.sender].delivery++;
         infobuilder[msg.sender].link;
@@ -220,7 +221,7 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
         return bytes(idURIs[tokenId]).length != 0 ?
             string(abi.encodePacked(idURIs[tokenId], _toString(tokenId), json)) : "";
         } else { 
-        return bytes(baseuRI).length != 0 ? string(abi.encodePacked(baseuRI, _toString(tokenId), json)) : "";
+        return bytes(baseuRI).length != 0 ? string(abi.encodePacked(baseuRI, _toString(tokenId))) : generalURI;
         } //inserir em uma pasta com imagens diferentes para simular projetos e 
     }
 

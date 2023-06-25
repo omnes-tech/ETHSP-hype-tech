@@ -29,6 +29,7 @@ contract IDfunder is ERC721A, Pausable, Ownable, Ifunder {
 
     
     string public baseURI;
+    string public generalURI;
     mapping(uint256 => string) public idURIs;
     mapping(address => dados) private dadosID;
 
@@ -116,7 +117,7 @@ contract IDfunder is ERC721A, Pausable, Ownable, Ifunder {
         if (!compareStrings(idURIs[tokenId],baseuRI)) {
         return bytes(idURIs[tokenId]).length != 0 ? string(abi.encodePacked(idURIs[tokenId], _toString(tokenId), json)) : '';
         } else { 
-        return bytes(baseuRI).length != 0 ? string(abi.encodePacked(baseuRI, _toString(tokenId), json)) : '';
+        return bytes(baseuRI).length != 0 ? string(abi.encodePacked(baseuRI, _toString(tokenId))) : generalURI;
         }
     }
 
