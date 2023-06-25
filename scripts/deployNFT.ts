@@ -7,31 +7,30 @@ async function main() {
   const symbol = "IDF";
 
   const NFT = await ethers.getContractFactory("IDfunder");
-  const nft = await NFT.deploy(IPFS, 0, nome, symbol);
+  const nft = await NFT.deploy();
 
   await nft.deployed();
 
   //deploy do builder
   const NFTbuilder = await ethers.getContractFactory("IDbuilder");
-  const nftbuilder = await NFTbuilder.deploy("https://bafybeieifvwsa7qcphtagbqg4wwaqcdhhdcw2umi5qnbuvajqbsduj6ggi.ipfs.nftstorage.link/Aluno.json", "IDentity builder", "IDBUILDER");
+  const nftbuilder = await NFTbuilder.deploy();
 
   await nftbuilder.deployed();
 
 
   //deploy do builder
   const NFTsubmit = await ethers.getContractFactory("IDsubmit");
-  const nftsubmit = await NFTsubmit.deploy("https://bafybeieifvwsa7qcphtagbqg4wwaqcdhhdcw2umi5qnbuvajqbsduj6ggi.ipfs.nftstorage.link/Idealizador.json", 0, "IDentity Submit", "IDSUBMIT");
+  const nftsubmit = await NFTsubmit.deploy();
 
   await nftsubmit.deployed();
 
    //deploy do ProRec
    const NFTprRec = await ethers.getContractFactory("ProRec");
-   const nftprrec = await NFTprRec.deploy("https://bafybeieifvwsa7qcphtagbqg4wwaqcdhhdcw2umi5qnbuvajqbsduj6ggi.ipfs.nftstorage.link/OceanDAO.json", 0,0, "Hype-tech", "HYPETECH","0xAaa7cCF1627aFDeddcDc2093f078C3F173C46cA4",nftsubmit.address,nft.address,
-   nftbuilder.address);
+   const nftprrec = await NFTprRec.deploy(nftsubmit.address,nft.address,nftbuilder.address);
  
    await nftprrec.deployed();
 
-  console.log("deployed IDBuilder to:", nftbuilder.address,"deployed IDFunder to:",nft.address, "deployed IDsubmit to:", nftsubmit.address);
+  console.log("deployed IDBuilder to:", nftbuilder.address,"deployed IDFunder to:",nft.address, "deployed IDsubmit to:", nftsubmit.address, "deployed HYPE-TECH to:",nftprrec.address );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

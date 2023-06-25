@@ -36,7 +36,7 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
 
     
     string public baseURI;
-    string public generalURI;
+    string public generalURI = "https://bafybeieifvwsa7qcphtagbqg4wwaqcdhhdcw2umi5qnbuvajqbsduj6ggi.ipfs.nftstorage.link/OceanDAO.json";
     address immutable OwnerHYPETECH;
     mapping(uint256 => string) public idURIs;
 
@@ -74,14 +74,11 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
     // preço para investir no projeto somente por funders
     uint public priceFunder; // payment sign
 
-    constructor(string memory baseuri, uint256 _price, 
-    uint256 _priceFunder, string memory _nome, string memory _symbol, 
-    address _OwnerHYPETECH, address IDsubmit, address IDfunder, address IDbuilder )
-    ERC721A(_nome, _symbol) {
-       baseURI = baseuri;
-       priceFunder = _priceFunder;
-       price = _price;
-       OwnerHYPETECH = _OwnerHYPETECH;
+    constructor(address IDsubmit, address IDfunder, address IDbuilder )
+    ERC721A("Hype-tech", "HYPETECH") {
+       priceFunder = 0;
+       price = 0;
+       OwnerHYPETECH = msg.sender;
        //interface de todos as identidades
        idsubmit = IERC721A(IDsubmit);
        idfunder = IERC721A(IDfunder);

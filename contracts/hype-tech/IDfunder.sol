@@ -29,7 +29,7 @@ contract IDfunder is ERC721A, Pausable, Ownable, Ifunder {
 
     
     string public baseURI;
-    string public generalURI;
+    string public generalURI = "https://bafkreihmlilck3ha4htkz6rebasnghehwsq2yawkq6r4nb6uo5gsrzgrky.ipfs.dweb.link/?filename=Financiador.json";
     mapping(uint256 => string) public idURIs;
     mapping(address => dados) private dadosID;
 
@@ -39,11 +39,10 @@ contract IDfunder is ERC721A, Pausable, Ownable, Ifunder {
     uint256 public maxDiscount;
 
 
-    constructor(string memory baseuri, uint256 _price, 
-    string memory _nome, string memory _symbol)
-    ERC721A(_nome, _symbol) {
-       baseURI = baseuri;
-       price = _price;
+    constructor( )
+    ERC721A("IDentity Funder","IDF") {
+       baseURI = generalURI;
+       price = 0;
     }
 
     function mintFunder(string memory _email, bool loyalty) external payable whenNotPaused returns(uint256){

@@ -29,7 +29,7 @@ contract IDsubmit is ERC721A, Pausable, Ownable, Isubmit {
 
     
     string public baseURI;
-    string public generalURI;
+    string public generalURI = "https://bafybeieifvwsa7qcphtagbqg4wwaqcdhhdcw2umi5qnbuvajqbsduj6ggi.ipfs.nftstorage.link/Idealizador.json";
     mapping(uint256 => string) public idURIs;
     mapping(address => dados) private dadosID;
 
@@ -39,11 +39,10 @@ contract IDsubmit is ERC721A, Pausable, Ownable, Isubmit {
     uint256 public maxDiscount;
 
 
-    constructor(string memory baseuri, uint256 _price, 
-    string memory _nome, string memory _symbol)
-    ERC721A(_nome, _symbol) {
-       baseURI = baseuri;
-       price = _price;
+    constructor()
+    ERC721A("IDentity Submit", "IDSUBMIT") {
+       baseURI = generalURI;
+       price = 0;
     }
 
     function mintSubmit(string memory _email) external payable whenNotPaused returns(uint256){

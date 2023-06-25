@@ -30,7 +30,7 @@ contract IDbuilder is ERC721A, Pausable, Ownable, Ibuilder {
     string[] private _scriptURI; //when use A.I 
     
     string public baseURI;
-    string public generalURI;
+    string public generalURI = "https://bafybeieifvwsa7qcphtagbqg4wwaqcdhhdcw2umi5qnbuvajqbsduj6ggi.ipfs.nftstorage.link/Aluno.json";
     mapping(uint256 => string) public idURIs;
     mapping(address => dados) private dadosID;
 
@@ -40,10 +40,9 @@ contract IDbuilder is ERC721A, Pausable, Ownable, Ibuilder {
     uint256 public maxDiscount;
 
 
-    constructor(string memory baseuri, 
-    string memory _nome, string memory _symbol)
-    ERC721A(_nome, _symbol) {
-       baseURI = baseuri;
+    constructor( )
+    ERC721A("IDentity builder", "IDBUILDER") {
+       baseURI = generalURI;
     }
 
     function mintBuilder(string memory _email, bool _student, bool _teacher) external payable whenNotPaused returns(uint256){
