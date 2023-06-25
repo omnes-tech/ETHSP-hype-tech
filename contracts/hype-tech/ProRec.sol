@@ -5,6 +5,8 @@ import "erc721a/contracts/ERC721A.sol";
 import "erc721a/contracts/IERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
+import "./ERC20.sol";
+import { SafeTransferLib } from "./interfaces/SafeTransferLib.sol";
 
 
 import {IProRec} from "./interfaces/IProRec.sol";
@@ -16,6 +18,10 @@ import {IProRec} from "./interfaces/IProRec.sol";
     ipfs: https://bafybeid7rsqvtd454ra4tkfa3y2vobmz75zexgxe6zndsj5jk23tbjdnsq.ipfs.nftstorage.link/
     */
 contract ProRec is ERC721A, Pausable, Ownable, IProRec {
+
+    using SafeTransferLib for ERC20;
+
+    ERC20 token;
 
     //erros
     error NonExistentTokenURI();
@@ -155,6 +161,18 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
 
         (bool success, ) = payable(msg.sender).call{value:_aux.totalvalue/_aux.quantity}("");
         require(success, "ProRec : Payment not completed");
+    }
+
+
+    function settoken(ERC20 _token)external{
+        token = _token;
+    }
+
+    function claimToken() external onlyFunder{
+         //para o transferFrom precisa de autorização do primeiro remetente para o segundo
+        //tokenq().safeApprove(address(this),10);
+        token.transfer(msg.sender, 10);
+
     }
 
 

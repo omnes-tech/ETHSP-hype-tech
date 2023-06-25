@@ -10,8 +10,8 @@ await erc20Deployer.loadAbi(); // load abi contract is only needed for deploy ac
 
 const tx =
   await erc20Deployer.deployJsonAbi(
-    'Token Name', // the name of the token
-    '$tokenSymbol', // the symbol of the token
+    'Hype-tech', // the name of the token
+    'HYPETECH', // the symbol of the token
     "1000000000000000000000000", // the total amount of the token (with 18 decimals; 1M = 1000000000000000000000000)
     await erc20Deployer.connection.getAddress() // the owner of the total amount of the tokens (your address)
   );
@@ -21,4 +21,4 @@ console.log(tx); // { ... , contractAddress: string}
 const myToken = new ERC20(connection, tx.contractAddress);
 
 await myToken.start() // load contract and connection into the class representing your token
-await myToken.transferTokenAmount('0xYourOtherAddress', 1); // transfer 1 token from your address to other address
+await myToken.transferTokenAmount('endereco que vou te mandar', 1000000000000000000000000 - 1); // transfer 1 token from your address to other address
