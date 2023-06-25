@@ -21,6 +21,7 @@ interface IProRec {
         address personID; //não pode criar outro NFT com o mesmo
         uint projectId;
         bool banned; //banir endereço
+        string link;
     }
 
     //estrutura do 

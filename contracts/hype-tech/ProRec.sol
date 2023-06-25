@@ -122,13 +122,15 @@ contract ProRec is ERC721A, Pausable, Ownable, IProRec {
         infobuilder[msg.sender].projectId = _projectId;
     }
 
-    function deliverBuilder(uint _projectId) external onlyBuilder {
+    function deliverBuilder(uint _projectId, string memory _link) external onlyBuilder {
         builder memory _aux = infobuilder[msg.sender];
         Project memory _project = infoProject[_projectId];
         require(_aux.projectId == _projectId,"ProRec : Wrong project");
         require(_aux.delivery < 3, "ProRec : Already Delivered");
+        require(compareStrings(_aux.link, link) == false, "ProRec : Already Delivered" );
 
         infobuilder[msg.sender].delivery++;
+        infobuilder[msg.sender].link;
 
         uint _internalCounter;
 

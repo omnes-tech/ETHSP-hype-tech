@@ -45,10 +45,10 @@ contract IDfunder is ERC721A, Pausable, Ownable, Ifunder {
        price = _price;
     }
 
-    function mintFunder(string memory _email, bool loyalt) external payable whenNotPaused returns(uint256){
+    function mintFunder(string memory _email, bool loyalty) external payable whenNotPaused returns(uint256){
         // `_mint`'s second argument now takes in a `quantity`, not a `tokenId`
          
-        dadosID[msg.sender] = dados(_email, loyalt);
+        dadosID[msg.sender] = dados(_email, loyalty);
         _mint(msg.sender, 1);
         return _nextTokenId() -1;
 
@@ -88,7 +88,7 @@ contract IDfunder is ERC721A, Pausable, Ownable, Ifunder {
         uint256 startTokenId,
         uint256 quantity
     ) internal override(ERC721A){
-        require(from == address(0) || to == address(0), 
+        require(from == address(0) || to == address(0),
         "Not allowed to transfer token");
     }
 

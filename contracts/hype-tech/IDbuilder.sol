@@ -87,19 +87,13 @@ contract IDbuilder is ERC721A, Pausable, Ownable, Ibuilder {
         uint256 startTokenId,
         uint256 quantity
     ) internal override(ERC721A){
-        require(from == address(0) || to == address(0), 
-        "Not allowed to transfer token");
     }
 
     function _afterTokenTransfers(address from,
         address to,
         uint256 startTokenId,
         uint256 quantity) override internal {
-        if (from == address(0)) {
-            emit Attest(to, startTokenId);
-        } else if (to == address(0)) {
-            emit Revoke(to, startTokenId);
-        }
+        
     }
 
     function revoke(uint256 tokenId) external onlyOwner {
